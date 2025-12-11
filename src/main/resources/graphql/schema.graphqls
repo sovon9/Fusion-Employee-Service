@@ -1,0 +1,25 @@
+directive @lookup on FIELD_DEFINITION
+directive @internal on FIELD_DEFINITION
+
+type Query
+{
+    employees(where: FilterEmployee): [Employee]
+}
+
+type Employee
+{
+    id: Int
+    name: String
+    salary: Float
+    department: Department @lookup
+}
+
+type Department
+{
+    id: Int
+}
+
+input FilterEmployee
+{
+    id: Int
+}
