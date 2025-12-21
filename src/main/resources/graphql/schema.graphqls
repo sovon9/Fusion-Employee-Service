@@ -1,14 +1,34 @@
 directive @lookup on FIELD_DEFINITION
 directive @internal on FIELD_DEFINITION
+directive @sharable on INTERFACE | OBJECT | FIELD_DEFINITION
 
 type Query
 {
-    employees(where: FilterEmployee): [Employee]
+    employees(where: FilterEmployee,first: Int, after: String, last: Int, before: String): EmployeeConnection
+    node(id: ID!): Node
 }
 
-type Employee
+interface Node @sharable
 {
-    id: Int
+    id: ID!
+}
+
+#type EmployeeConnection
+#{
+#    edges: [EmployeeEdge]
+#    pageInfo: PageInfo!
+#}
+
+#type EmployeeEdge
+#{
+#    node: Employee
+#    cursor: String!
+#}
+
+type Employee implements Node @sharable
+{
+    id: ID!
+    eid: Int!
     name: String
     salary: Float
     department: Department @lookup
@@ -23,3 +43,10 @@ input FilterEmployee
 {
     id: Int
 }
+
+#type PageInfo {
+#    hasNextPage: Boolean!
+#    hasPreviousPage: Boolean!
+#    startCursor: String
+#    endCursor: String
+#}
