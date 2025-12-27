@@ -4,7 +4,7 @@ directive @sharable on INTERFACE | OBJECT | FIELD_DEFINITION
 
 type Query
 {
-    employees(where: FilterEmployee,first: Int, after: String, last: Int, before: String): EmployeeConnection
+    employees(where: FilterEmployee,first: Int, after: String, last: Int, before: String, order: EmployeeOrder): EmployeeConnection # employee data
     node(id: ID!): Node
 }
 
@@ -13,25 +13,25 @@ interface Node @sharable
     id: ID!
 }
 
-#type EmployeeConnection
-#{
-#    edges: [EmployeeEdge]
-#    pageInfo: PageInfo!
-#}
+type EmployeeConnection
+{
+    edges: [EmployeeEdge]
+    pageInfo: PageInfo!
+}
 
-#type EmployeeEdge
-#{
-#    node: Employee
-#    cursor: String!
-#}
+type EmployeeEdge
+{
+    node: Employee
+    cursor: String!
+}
 
 type Employee implements Node @sharable
 {
     id: ID!
-    eid: Int!
-    name: String
-    salary: Float
-    department: Department @lookup
+    eid: Int! # employee id
+    name: String # employee name
+    salary: Float # employee salary
+    department: Department @lookup # employee department
 }
 
 type Department
@@ -41,12 +41,26 @@ type Department
 
 input FilterEmployee
 {
-    id: Int
+    eid: Int
+    name: String
+    salary: Float
 }
 
-#type PageInfo {
-#    hasNextPage: Boolean!
-#    hasPreviousPage: Boolean!
-#    startCursor: String
-#    endCursor: String
-#}
+type PageInfo {
+    endCursor: String
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+    startCursor: String
+}
+
+input EmployeeOrder
+{
+    eid: SortDirection
+    name: SortDirection
+    salary: SortDirection
+}
+enum SortDirection
+{
+    ASC
+    DESC
+}

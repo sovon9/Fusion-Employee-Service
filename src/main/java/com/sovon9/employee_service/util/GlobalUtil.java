@@ -4,6 +4,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 public class GlobalUtil {
+
     public static String toGlobalId(String type, Object id) {
         return Base64.getEncoder()
                 .encodeToString((type + ":" + id).getBytes(StandardCharsets.UTF_8));
